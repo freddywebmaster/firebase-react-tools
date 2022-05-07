@@ -1,31 +1,22 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useStorage = void 0;
 const react_1 = require("react");
 const storage_1 = require("firebase/storage");
-const firestore_1 = require("../firestore");
+const Firestore_1 = require("../firestore/Firestore");
 const useStorage = (app) => {
     const storage = (0, storage_1.getStorage)(app);
-    const db = new firestore_1.FirestoreService("storage", app);
+    const db = new Firestore_1.FirestoreService("storage", app);
     const [uploading, setUploading] = (0, react_1.useState)(false);
-    const uploadFile = (reference, file, saveInDb) => __awaiter(void 0, void 0, void 0, function* () {
+    const uploadFile = async (reference, file, saveInDb) => {
         if (uploading)
             return { error: true };
         try {
             setUploading(true);
             const storageRef = (0, storage_1.ref)(storage, reference);
-            const uploadTask = yield (0, storage_1.uploadBytes)(storageRef, file);
+            const uploadTask = await (0, storage_1.uploadBytes)(storageRef, file);
             console.log(uploadTask);
-            const url = yield (0, storage_1.getDownloadURL)(uploadTask.ref);
+            const url = await (0, storage_1.getDownloadURL)(uploadTask.ref);
             const fileResult = {
                 url,
                 metadata: {
@@ -37,7 +28,7 @@ const useStorage = (app) => {
                 },
             };
             if (url && saveInDb) {
-                const save = yield db.add(fileResult, fileResult.metadata.generation);
+                const save = await db.add(fileResult, fileResult.metadata.generation);
                 if (save.error) {
                     console.log(save.message);
                 }
@@ -57,8 +48,8 @@ const useStorage = (app) => {
             console.log(error);
             return { error: true };
         }
-    });
-    const uploadFiles = (reference, files, saveInDb) => __awaiter(void 0, void 0, void 0, function* () {
+    };
+    const uploadFiles = async (reference, files, saveInDb) => {
         if (uploading)
             return [{ error: true }];
         try {
@@ -66,7 +57,7 @@ const useStorage = (app) => {
             const resulArray = [];
             const totalFiles = files.length;
             for (let i = 0; i < totalFiles; i++) {
-                const upload = yield uploadFile(reference + `/${files[i].name}${i}`, files[i], saveInDb);
+                const upload = await uploadFile(reference + `/${files[i].name}${i}`, files[i], saveInDb);
                 resulArray.push(upload);
             }
             return resulArray;
@@ -76,7 +67,7 @@ const useStorage = (app) => {
             console.log(error);
             return [{ error: true }];
         }
-    });
+    };
     return {
         uploading,
         uploadFile,

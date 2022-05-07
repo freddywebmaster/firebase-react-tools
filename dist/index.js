@@ -1,10 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.useStorage = exports.useAuthHook = exports.FirestoreService = exports.Authentication = void 0;
-var auth_1 = require("./auth");
-Object.defineProperty(exports, "Authentication", { enumerable: true, get: function () { return auth_1.Authentication; } });
-var firestore_1 = require("./firestore");
-Object.defineProperty(exports, "FirestoreService", { enumerable: true, get: function () { return firestore_1.FirestoreService; } });
-var hooks_1 = require("./hooks");
-Object.defineProperty(exports, "useAuthHook", { enumerable: true, get: function () { return hooks_1.useAuthHook; } });
-Object.defineProperty(exports, "useStorage", { enumerable: true, get: function () { return hooks_1.useStorage; } });
+//auth exports
+const Authentication_1 = require("./auth/Authentication");
+const Firestore_1 = require("./firestore/Firestore");
+const useAuth_1 = require("./hooks/useAuth");
+const useStorage_1 = require("./hooks/useStorage");
+module.exports = {
+    AuthService: Authentication_1.AuthService,
+    FirestoreService: Firestore_1.FirestoreService,
+    useAuth: useAuth_1.useAuth,
+    useStorage: useStorage_1.useStorage,
+};

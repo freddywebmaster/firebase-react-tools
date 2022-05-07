@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { getAuth, User } from "firebase/auth";
 
-export interface IAuthHook {
+export interface IUseAuth {
   user: User | null;
   loading: boolean;
 }
 
-export function useAuthHook(): IAuthHook {
+export function useAuth(): IUseAuth {
   const auth = getAuth();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -28,5 +28,5 @@ export function useAuthHook(): IAuthHook {
 
   const result = { user, loading };
 
-  return useMemo<IAuthHook>(() => result, [user, loading]);
+  return useMemo<IUseAuth>(() => result, [user, loading]);
 }

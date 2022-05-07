@@ -1,4 +1,4 @@
-import { User, updateProfile } from "firebase/auth";
+import { User } from "firebase/auth";
 
 export interface IAuthResponse {
   error: boolean;
@@ -11,7 +11,7 @@ export interface IUpdateProfile {
   photoURL?: string;
 }
 
-export interface AuthFunctions {
+export interface IAuthFunctions {
   createEmailAccount(
     email: string,
     password: string,

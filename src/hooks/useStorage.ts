@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ref, getDownloadURL, uploadBytes, getStorage } from "firebase/storage";
 import { FirebaseApp } from "firebase/app";
-import { FirestoreService } from "../firestore";
+import { FirestoreService } from "../firestore/Firestore";
 
 export interface iResponseStorage {
   file?: {
@@ -14,6 +14,20 @@ export interface iResponseStorage {
     };
   };
   error: boolean;
+}
+
+export interface IUseStotage {
+  uploading: boolean;
+  uploadFile(
+    reference: string,
+    file: File,
+    saveInDb?: boolean
+  ): Promise<iResponseStorage>;
+  uploadFiles(
+    reference: string,
+    files: FileList,
+    saveInDb?: boolean
+  ): Promise<Array<{}>>
 }
 
 export const useStorage = (app: FirebaseApp) => {
@@ -73,11 +87,11 @@ export const useStorage = (app: FirebaseApp) => {
     reference: string,
     files: FileList,
     saveInDb?: boolean
-  ): Promise<Array<{}>> => {
+  ): Promise<Array<iResponseStorage>> => {
     if (uploading) return [{ error: true }];
     try {
       setUploading(true);
-      const resulArray: Array<{}> = [];
+      const resulArray: Array<iResponseStorage> = [];
 
       const totalFiles = files.length;
 

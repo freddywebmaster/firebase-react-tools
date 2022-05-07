@@ -1,9 +1,14 @@
-export {
-  AuthFunctions,
-  Authentication,
-  IAuthResponse,
-  IUpdateProfile,
-} from "./auth";
-export { FirestoreService, IResponse } from "./firestore";
+//auth exports
+import { AuthService } from "./auth/Authentication";
 
-export { IAuthHook, iResponseStorage, useAuthHook, useStorage } from "./hooks";
+import { FirestoreService } from "./firestore/Firestore";
+
+import { useAuth } from "./hooks/useAuth";
+import { useStorage } from "./hooks/useStorage";
+
+module.exports = {
+  AuthService,
+  FirestoreService,
+  useAuth,
+  useStorage,
+};

@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.useAuthHook = void 0;
+exports.useAuth = void 0;
 const react_1 = require("react");
 const auth_1 = require("firebase/auth");
-function useAuthHook() {
+function useAuth() {
     const auth = (0, auth_1.getAuth)();
     const [user, setUser] = (0, react_1.useState)(null);
     const [loading, setLoading] = (0, react_1.useState)(true);
@@ -24,4 +24,4 @@ function useAuthHook() {
     const result = { user, loading };
     return (0, react_1.useMemo)(() => result, [user, loading]);
 }
-exports.useAuthHook = useAuthHook;
+exports.useAuth = useAuth;

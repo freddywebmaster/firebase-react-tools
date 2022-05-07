@@ -1,23 +1,35 @@
 import { DocumentData, QueryConstraint } from "firebase/firestore";
 
-export interface IResponse {
+export interface IResponseFirestore {
   error: boolean;
   message: string;
   data?: DocumentData;
 }
 
-export interface FirebaseFunctions {
-  add(data: DocumentData): Promise<IResponse>;
-  findById(id: string): Promise<IResponse>;
-  find(queryOptions?: QueryConstraint): Promise<IResponse>;
-  delete(id: string): Promise<IResponse>;
-  update(id: string, newData: DocumentData, merge: boolean): Promise<IResponse>;
-  transaction(id: string, field: string, value: number): Promise<IResponse>;
-  addInArray(id: string, field: string, data: DocumentData): Promise<IResponse>;
+export interface IFirebaseFunctions {
+  add(data: DocumentData): Promise<IResponseFirestore>;
+  findById(id: string): Promise<IResponseFirestore>;
+  find(queryOptions?: QueryConstraint): Promise<IResponseFirestore>;
+  delete(id: string): Promise<IResponseFirestore>;
+  update(
+    id: string,
+    newData: DocumentData,
+    merge: boolean
+  ): Promise<IResponseFirestore>;
+  transaction(
+    id: string,
+    field: string,
+    value: number
+  ): Promise<IResponseFirestore>;
+  addInArray(
+    id: string,
+    field: string,
+    data: DocumentData
+  ): Promise<IResponseFirestore>;
   deleteInArray(
     id: string,
     field: string,
     data: DocumentData
-  ): Promise<IResponse>;
-  deleteField(id: string, field: string): Promise<IResponse>;
+  ): Promise<IResponseFirestore>;
+  deleteField(id: string, field: string): Promise<IResponseFirestore>;
 }

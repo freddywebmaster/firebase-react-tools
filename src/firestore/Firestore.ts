@@ -1,5 +1,4 @@
 import { FirebaseApp } from "firebase/app";
-import { Unsubscribe } from "firebase/auth";
 import {
   getFirestore,
   Firestore,
@@ -19,10 +18,11 @@ import {
   arrayRemove,
   deleteField,
   onSnapshot,
+  Unsubscribe,
 } from "firebase/firestore";
-import { IResponse, FirebaseFunctions } from "./Interfaces";
+import { IResponseFirestore, IFirebaseFunctions } from "./Interfaces";
 
-export class FirestoreService implements FirebaseFunctions {
+export class FirestoreService implements IFirebaseFunctions {
   private db: Firestore;
   readonly collection: string;
 
@@ -31,7 +31,7 @@ export class FirestoreService implements FirebaseFunctions {
     this.collection = collection;
   }
 
-  async add(data: DocumentData, id?: string): Promise<IResponse> {
+  async add(data: DocumentData, id?: string): Promise<IResponseFirestore> {
     try {
       if (!id) {
         const docRef = await addDoc(Col(this.db, this.collection), data);
@@ -55,7 +55,7 @@ export class FirestoreService implements FirebaseFunctions {
     }
   }
 
-  async findById(id: string): Promise<IResponse> {
+  async findById(id: string): Promise<IResponseFirestore> {
     try {
       const docRef = doc(this.db, this.collection, id);
       const docSnap = await getDoc(docRef);
@@ -71,7 +71,7 @@ export class FirestoreService implements FirebaseFunctions {
     }
   }
 
-  async find(queryOptions?: QueryConstraint): Promise<IResponse> {
+  async find(queryOptions?: QueryConstraint): Promise<IResponseFirestore> {
     if (!queryOptions) {
       /** GET ALL */
       try {
@@ -101,7 +101,7 @@ export class FirestoreService implements FirebaseFunctions {
 
         await querySnapshot.forEach((doc) => {
           let item = doc.data();
-          item.id = doc.id;
+          item._id = doc.id;
           result.push(item);
         });
 
@@ -116,7 +116,7 @@ export class FirestoreService implements FirebaseFunctions {
     }
   }
 
-  async delete(id: string): Promise<IResponse> {
+  async delete(id: string): Promise<IResponseFirestore> {
     try {
       await deleteDoc(doc(this.db, this.collection, id));
       return { data: { id }, message: `doc deleted: ${id}`, error: false };
@@ -129,7 +129,7 @@ export class FirestoreService implements FirebaseFunctions {
     id: string,
     newData: DocumentData,
     merge: boolean = true
-  ): Promise<IResponse> {
+  ): Promise<IResponseFirestore> {
     try {
       const docRef = doc(this.db, this.collection, id);
       setDoc(docRef, newData, { merge });
@@ -144,7 +144,7 @@ export class FirestoreService implements FirebaseFunctions {
     id: string,
     field: string,
     value: number
-  ): Promise<IResponse> {
+  ): Promise<IResponseFirestore> {
     try {
       const docRef = doc(this.db, this.collection, id);
 
@@ -161,7 +161,7 @@ export class FirestoreService implements FirebaseFunctions {
     id: string,
     field: string,
     data: DocumentData
-  ): Promise<IResponse> {
+  ): Promise<IResponseFirestore> {
     try {
       const docRef = doc(this.db, this.collection, id);
       await updateDoc(docRef, {
@@ -171,17 +171,20 @@ export class FirestoreService implements FirebaseFunctions {
       return {
         error: false,
         message: "data added to array success",
-        data: { id: docRef.id },
+        data: { _id: docRef.id },
       };
     } catch (e) {
-      return { error: true, message: (e as Error).message } as IResponse;
+      return {
+        error: true,
+        message: (e as Error).message,
+      } as IResponseFirestore;
     }
   }
   async deleteInArray(
     id: string,
     field: string,
     data: DocumentData
-  ): Promise<IResponse> {
+  ): Promise<IResponseFirestore> {
     try {
       const docRef = doc(this.db, this.collection, id);
       await updateDoc(docRef, {
@@ -191,14 +194,17 @@ export class FirestoreService implements FirebaseFunctions {
       return {
         error: false,
         message: "data removed of array success",
-        data: { id: docRef.id },
+        data: { _id: docRef.id },
       };
     } catch (e) {
-      return { error: true, message: (e as Error).message } as IResponse;
+      return {
+        error: true,
+        message: (e as Error).message,
+      } as IResponseFirestore;
     }
   }
 
-  async deleteField(id: string, field: string): Promise<IResponse> {
+  async deleteField(id: string, field: string): Promise<IResponseFirestore> {
     try {
       const docRef = doc(this.db, this.collection, id);
       await updateDoc(docRef, {
@@ -206,17 +212,23 @@ export class FirestoreService implements FirebaseFunctions {
       });
       return { error: false, message: "field deleted", data: { id } };
     } catch (e) {
-      return { error: true, message: (e as Error).message } as IResponse;
+      return {
+        error: true,
+        message: (e as Error).message,
+      } as IResponseFirestore;
     }
   }
 
-  findDocumentRt(col: string, id: string, callBack: Function) {
+  findDocumentRt(id: string, callBack: Function) {
     try {
-      return onSnapshot(doc(this.db, col, id), function (doc) {
+      return onSnapshot(doc(this.db, this.collection, id), function (doc) {
         callBack(doc.data());
       });
     } catch (e) {
-      return { error: true, message: (e as Error).message } as IResponse;
+      return {
+        error: true,
+        message: (e as Error).message,
+      } as IResponseFirestore;
     }
   }
 
@@ -233,11 +245,14 @@ export class FirestoreService implements FirebaseFunctions {
         callback(result);
       });
     } catch (e) {
-      return { error: true, message: (e as Error).message } as IResponse;
+      return {
+        error: true,
+        message: (e as Error).message,
+      } as IResponseFirestore;
     }
   }
 
-  findCollectionRt(callBack: Function): Unsubscribe | IResponse {
+  findCollectionRt(callBack: Function): Unsubscribe | IResponseFirestore {
     try {
       const q = query(Col(this.db, this.collection));
       return onSnapshot(q, (querySnapshot) => {
@@ -250,7 +265,10 @@ export class FirestoreService implements FirebaseFunctions {
         callBack(result);
       });
     } catch (e) {
-      return { error: true, message: (e as Error).message } as IResponse;
+      return {
+        error: true,
+        message: (e as Error).message,
+      } as IResponseFirestore;
     }
   }
 }

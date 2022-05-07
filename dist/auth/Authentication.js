@@ -1,179 +1,154 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Authentication = void 0;
+exports.AuthService = void 0;
 const auth_1 = require("firebase/auth");
-const firestore_1 = require("../firestore");
+const Firestore_1 = require("../firestore/Firestore");
 const googleProvider = new auth_1.GoogleAuthProvider();
 const GithubProvider = new auth_1.GithubAuthProvider();
 const FacebookProvider = new auth_1.FacebookAuthProvider();
 const TwitterProvider = new auth_1.TwitterAuthProvider();
-class Authentication {
+class AuthService {
     constructor(app) {
         this.auth = (0, auth_1.getAuth)(app);
-        this.db = new firestore_1.FirestoreService("users", app);
+        this.db = new Firestore_1.FirestoreService("users", app);
     }
-    createEmailAccount(email, password, name) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const newUser = yield (0, auth_1.createUserWithEmailAndPassword)(this.auth, email, password);
-                if (name)
-                    yield (0, auth_1.updateProfile)(this.auth.currentUser, {
-                        displayName: name,
-                    });
-                return {
-                    error: false,
-                    message: "Account created succesfully",
-                    user: newUser.user,
-                };
-            }
-            catch (e) {
-                return {
-                    error: true,
-                    message: e.message,
-                    user: null,
-                };
-            }
-        });
-    }
-    loginEmailAccount(email, password) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const res = yield (0, auth_1.signInWithEmailAndPassword)(this.auth, email, password);
-                return {
-                    error: false,
-                    message: "Login successfully",
-                    user: res.user,
-                };
-            }
-            catch (e) {
-                return {
-                    error: true,
-                    message: e.message,
-                    user: null,
-                };
-            }
-        });
-    }
-    loginGoogle() {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const result = yield (0, auth_1.signInWithPopup)(this.auth, googleProvider);
-                return {
-                    error: false,
-                    message: "Authentication successfully",
-                    user: result.user,
-                };
-            }
-            catch (e) {
-                return {
-                    error: true,
-                    message: e.message,
-                };
-            }
-        });
-    }
-    loginGithub() {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const result = yield (0, auth_1.signInWithPopup)(this.auth, GithubProvider);
-                return {
-                    error: false,
-                    message: "Authentication successfully",
-                    user: result.user,
-                };
-            }
-            catch (e) {
-                return {
-                    error: true,
-                    message: e.message,
-                    user: null,
-                };
-            }
-        });
-    }
-    loginFacebook() {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const res = yield (0, auth_1.signInWithPopup)(this.auth, FacebookProvider);
-                return {
-                    error: false,
-                    message: "Authentication successfully",
-                    user: res.user,
-                };
-            }
-            catch (e) {
-                return {
-                    error: true,
-                    message: e.message,
-                    user: null,
-                };
-            }
-        });
-    }
-    loginTwitter() {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const res = yield (0, auth_1.signInWithPopup)(this.auth, TwitterProvider);
-                return {
-                    error: false,
-                    message: "Authentication successfully",
-                    user: res.user,
-                };
-            }
-            catch (e) {
-                return {
-                    error: true,
-                    message: e.message,
-                    user: null,
-                };
-            }
-        });
-    }
-    updatePass(password, newPassword, callback) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const user = this.auth.currentUser;
-                yield this.reAuthUser(password, () => {
-                    (0, auth_1.updatePassword)(user, newPassword)
-                        .then(() => {
-                        if (callback)
-                            callback(user);
-                    })
-                        .catch((error) => {
-                        console.log(error);
-                    });
+    async createEmailAccount(email, password, name) {
+        try {
+            const newUser = await (0, auth_1.createUserWithEmailAndPassword)(this.auth, email, password);
+            if (name)
+                await (0, auth_1.updateProfile)(this.auth.currentUser, {
+                    displayName: name,
                 });
-            }
-            catch (error) {
-                console.log(error);
-            }
-        });
+            return {
+                error: false,
+                message: "Account created succesfully",
+                user: newUser.user,
+            };
+        }
+        catch (e) {
+            return {
+                error: true,
+                message: e.message,
+                user: null,
+            };
+        }
     }
-    UpdateProfile(data, callback) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                yield (0, auth_1.updateProfile)(this.auth.currentUser, data)
+    async loginEmailAccount(email, password) {
+        try {
+            const res = await (0, auth_1.signInWithEmailAndPassword)(this.auth, email, password);
+            return {
+                error: false,
+                message: "Login successfully",
+                user: res.user,
+            };
+        }
+        catch (e) {
+            return {
+                error: true,
+                message: e.message,
+                user: null,
+            };
+        }
+    }
+    async loginGoogle() {
+        try {
+            const result = await (0, auth_1.signInWithPopup)(this.auth, googleProvider);
+            return {
+                error: false,
+                message: "Authentication successfully",
+                user: result.user,
+            };
+        }
+        catch (e) {
+            return {
+                error: true,
+                message: e.message,
+            };
+        }
+    }
+    async loginGithub() {
+        try {
+            const result = await (0, auth_1.signInWithPopup)(this.auth, GithubProvider);
+            return {
+                error: false,
+                message: "Authentication successfully",
+                user: result.user,
+            };
+        }
+        catch (e) {
+            return {
+                error: true,
+                message: e.message,
+                user: null,
+            };
+        }
+    }
+    async loginFacebook() {
+        try {
+            const res = await (0, auth_1.signInWithPopup)(this.auth, FacebookProvider);
+            return {
+                error: false,
+                message: "Authentication successfully",
+                user: res.user,
+            };
+        }
+        catch (e) {
+            return {
+                error: true,
+                message: e.message,
+                user: null,
+            };
+        }
+    }
+    async loginTwitter() {
+        try {
+            const res = await (0, auth_1.signInWithPopup)(this.auth, TwitterProvider);
+            return {
+                error: false,
+                message: "Authentication successfully",
+                user: res.user,
+            };
+        }
+        catch (e) {
+            return {
+                error: true,
+                message: e.message,
+                user: null,
+            };
+        }
+    }
+    async updatePass(password, newPassword, callback) {
+        try {
+            const user = this.auth.currentUser;
+            await this.reAuthUser(password, () => {
+                (0, auth_1.updatePassword)(user, newPassword)
                     .then(() => {
                     if (callback)
-                        callback();
+                        callback(user);
                 })
                     .catch((error) => {
                     console.log(error);
                 });
-            }
-            catch (error) {
+            });
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+    async UpdateProfile(data, callback) {
+        try {
+            await (0, auth_1.updateProfile)(this.auth.currentUser, data)
+                .then(() => {
+                if (callback)
+                    callback();
+            })
+                .catch((error) => {
                 console.log(error);
-            }
-        });
+            });
+        }
+        catch (error) {
+            console.log(error);
+        }
     }
     reAuthUser(password, callBack) {
         var _a;
@@ -187,76 +162,51 @@ class Authentication {
             console.log(error);
         });
     }
-    sendVerification(callback) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                yield (0, auth_1.sendEmailVerification)(this.auth.currentUser).then(() => {
-                    if (callback)
-                        callback();
-                });
-            }
-            catch (error) {
-                console.log(error);
-            }
-        });
+    async sendVerification(callback) {
+        try {
+            await (0, auth_1.sendEmailVerification)(this.auth.currentUser).then(() => {
+                if (callback)
+                    callback();
+            });
+        }
+        catch (error) {
+            console.log(error);
+        }
     }
-    sendResetPassword(email, callback) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                yield (0, auth_1.sendPasswordResetEmail)(this.auth, email)
+    async sendResetPassword(email, callback) {
+        try {
+            await (0, auth_1.sendPasswordResetEmail)(this.auth, email)
+                .then(() => {
+                callback();
+            })
+                .catch((error) => {
+                console.log(error);
+            });
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+    async deleteAccount(password, callback) {
+        try {
+            await this.reAuthUser(password, async () => {
+                await (0, auth_1.deleteUser)(this.auth.currentUser)
                     .then(() => {
                     callback();
                 })
                     .catch((error) => {
                     console.log(error);
                 });
-            }
-            catch (error) {
-                console.log(error);
-            }
-        });
+            });
+        }
+        catch (error) {
+            console.log(error);
+        }
     }
-    deleteAccount(password, callback) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                yield this.reAuthUser(password, () => __awaiter(this, void 0, void 0, function* () {
-                    yield (0, auth_1.deleteUser)(this.auth.currentUser)
-                        .then(() => {
-                        callback();
-                    })
-                        .catch((error) => {
-                        console.log(error);
-                    });
-                }));
-            }
-            catch (error) {
-                console.log(error);
-            }
-        });
-    }
-    updateEmail(password, newEmail, callback) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                yield this.reAuthUser(password, () => __awaiter(this, void 0, void 0, function* () {
-                    yield (0, auth_1.updateEmail)(this.auth.currentUser, newEmail)
-                        .then(() => {
-                        if (callback)
-                            callback();
-                    })
-                        .catch((error) => {
-                        console.log(error);
-                    });
-                }));
-            }
-            catch (error) {
-                console.log(error);
-            }
-        });
-    }
-    closeSession(callback) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                yield (0, auth_1.signOut)(this.auth)
+    async updateEmail(password, newEmail, callback) {
+        try {
+            await this.reAuthUser(password, async () => {
+                await (0, auth_1.updateEmail)(this.auth.currentUser, newEmail)
                     .then(() => {
                     if (callback)
                         callback();
@@ -264,24 +214,37 @@ class Authentication {
                     .catch((error) => {
                     console.log(error);
                 });
-            }
-            catch (error) {
-                console.log(error);
-            }
-        });
+            });
+        }
+        catch (error) {
+            console.log(error);
+        }
     }
-    saveInFirestore(user) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const res = yield this.db.update(user.uid, user, false);
-                if (res.error)
-                    return false;
-                return true;
-            }
-            catch (error) {
+    async closeSession(callback) {
+        try {
+            await (0, auth_1.signOut)(this.auth)
+                .then(() => {
+                if (callback)
+                    callback();
+            })
+                .catch((error) => {
+                console.log(error);
+            });
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+    async saveInFirestore(user) {
+        try {
+            const res = await this.db.update(user.uid, user, false);
+            if (res.error)
                 return false;
-            }
-        });
+            return true;
+        }
+        catch (error) {
+            return false;
+        }
     }
 }
-exports.Authentication = Authentication;
+exports.AuthService = AuthService;

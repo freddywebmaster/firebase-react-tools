@@ -20,16 +20,16 @@ import {
   TwitterAuthProvider,
 } from "firebase/auth";
 import { FirebaseApp } from "firebase/app";
-import { FirestoreService } from "../firestore";
+import { FirestoreService } from "../firestore/Firestore";
 
 const googleProvider = new GoogleAuthProvider();
 const GithubProvider = new GithubAuthProvider();
 const FacebookProvider = new FacebookAuthProvider();
 const TwitterProvider = new TwitterAuthProvider();
 
-import { IAuthResponse, IUpdateProfile, AuthFunctions } from "./interfaces";
+import { IAuthResponse, IUpdateProfile, IAuthFunctions } from "./interfaces";
 
-export class Authentication implements AuthFunctions {
+export class AuthService implements IAuthFunctions {
   private auth: Auth;
   private db: FirestoreService;
 
