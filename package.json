@@ -3,6 +3,7 @@
   "version": "0.0.3",
   "description": "tools for firebase with react",
   "main": "./dist",
+  "types": "./index.d.ts",
   "scripts": {
     "build": "rm -rf ./dist && tsc && cp src/index.js dist/index.js",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
