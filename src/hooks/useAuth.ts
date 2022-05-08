@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import { getAuth, User } from 'firebase/auth';
+import { FirebaseApp } from 'firebase/app';
 
 export interface IUseAuth {
   user: User | null;
   loading: boolean;
 }
 
-export function useAuth(): IUseAuth {
-  const auth = getAuth();
+export function useAuth(app: FirebaseApp): IUseAuth {
+  const auth = getAuth(app);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
