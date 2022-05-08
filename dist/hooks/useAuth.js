@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.useAuth = void 0;
 const react_1 = require("react");
 const auth_1 = require("firebase/auth");
-function useAuth() {
-    const auth = (0, auth_1.getAuth)();
+function useAuth(app) {
+    const auth = (0, auth_1.getAuth)(app);
     const [user, setUser] = (0, react_1.useState)(null);
     const [loading, setLoading] = (0, react_1.useState)(true);
     (0, react_1.useEffect)(() => {
