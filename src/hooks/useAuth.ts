@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { getAuth, User } from "firebase/auth";
+import { useEffect, useMemo, useState } from 'react';
+import { getAuth, User } from 'firebase/auth';
 
 export interface IUseAuth {
   user: User | null;

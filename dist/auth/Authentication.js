@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const auth_1 = require("firebase/auth");
-const Firestore_1 = require("../firestore/Firestore");
 const googleProvider = new auth_1.GoogleAuthProvider();
 const GithubProvider = new auth_1.GithubAuthProvider();
 const FacebookProvider = new auth_1.FacebookAuthProvider();
@@ -10,7 +9,6 @@ const TwitterProvider = new auth_1.TwitterAuthProvider();
 class AuthService {
     constructor(app) {
         this.auth = (0, auth_1.getAuth)(app);
-        this.db = new Firestore_1.FirestoreService("users", app);
     }
     async createEmailAccount(email, password, name) {
         try {
@@ -21,7 +19,7 @@ class AuthService {
                 });
             return {
                 error: false,
-                message: "Account created succesfully",
+                message: 'Account created succesfully',
                 user: newUser.user,
             };
         }
@@ -38,7 +36,7 @@ class AuthService {
             const res = await (0, auth_1.signInWithEmailAndPassword)(this.auth, email, password);
             return {
                 error: false,
-                message: "Login successfully",
+                message: 'Login successfully',
                 user: res.user,
             };
         }
@@ -55,7 +53,7 @@ class AuthService {
             const result = await (0, auth_1.signInWithPopup)(this.auth, googleProvider);
             return {
                 error: false,
-                message: "Authentication successfully",
+                message: 'Authentication successfully',
                 user: result.user,
             };
         }
@@ -71,7 +69,7 @@ class AuthService {
             const result = await (0, auth_1.signInWithPopup)(this.auth, GithubProvider);
             return {
                 error: false,
-                message: "Authentication successfully",
+                message: 'Authentication successfully',
                 user: result.user,
             };
         }
@@ -88,7 +86,7 @@ class AuthService {
             const res = await (0, auth_1.signInWithPopup)(this.auth, FacebookProvider);
             return {
                 error: false,
-                message: "Authentication successfully",
+                message: 'Authentication successfully',
                 user: res.user,
             };
         }
@@ -105,7 +103,7 @@ class AuthService {
             const res = await (0, auth_1.signInWithPopup)(this.auth, TwitterProvider);
             return {
                 error: false,
-                message: "Authentication successfully",
+                message: 'Authentication successfully',
                 user: res.user,
             };
         }
@@ -153,7 +151,7 @@ class AuthService {
     reAuthUser(password, callBack) {
         var _a;
         const user = this.auth.currentUser;
-        const credential = auth_1.EmailAuthProvider.credential(((_a = user.email) === null || _a === void 0 ? void 0 : _a.toLowerCase()) || "null", password);
+        const credential = auth_1.EmailAuthProvider.credential(((_a = user.email) === null || _a === void 0 ? void 0 : _a.toLowerCase()) || 'null', password);
         return (0, auth_1.reauthenticateWithCredential)(user, credential)
             .then(() => {
             callBack(user);
@@ -233,17 +231,6 @@ class AuthService {
         }
         catch (error) {
             console.log(error);
-        }
-    }
-    async saveInFirestore(user) {
-        try {
-            const res = await this.db.update(user.uid, user, false);
-            if (res.error)
-                return false;
-            return true;
-        }
-        catch (error) {
-            return false;
         }
     }
 }

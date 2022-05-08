@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FirestoreService = void 0;
 const firestore_1 = require("firebase/firestore");
 class FirestoreService {
-    constructor(collection, app) {
+    constructor(app, collection) {
         this.db = (0, firestore_1.getFirestore)(app);
         this.collection = collection;
     }
@@ -39,10 +39,10 @@ class FirestoreService {
             if (docSnap.exists()) {
                 let result = docSnap.data();
                 result._id = docSnap.id;
-                return { message: "Doc Exist", data: result, error: false };
+                return { message: 'Doc Exist', data: result, error: false };
             }
             else {
-                return { error: true, message: "Doc not found" };
+                return { error: true, message: 'Doc not found' };
             }
         }
         catch (e) {
@@ -61,7 +61,7 @@ class FirestoreService {
                     result.push(item);
                 });
                 return {
-                    message: "query executed success",
+                    message: 'query executed success',
                     data: result,
                     error: false,
                 };
@@ -76,12 +76,12 @@ class FirestoreService {
                 const querySnapshot = await (0, firestore_1.getDocs)(q);
                 const result = [];
                 await querySnapshot.forEach((doc) => {
-                    let item = doc.data();
+                    const item = doc.data();
                     item._id = doc.id;
                     result.push(item);
                 });
                 return {
-                    message: "query executed success",
+                    message: 'query executed success',
                     data: result,
                     error: false,
                 };
@@ -117,7 +117,7 @@ class FirestoreService {
             await (0, firestore_1.updateDoc)(docRef, {
                 [field]: (0, firestore_1.increment)(value),
             });
-            return { error: false, message: "transaction success" };
+            return { error: false, message: 'transaction success' };
         }
         catch (e) {
             return { error: true, message: e.message };
@@ -131,7 +131,7 @@ class FirestoreService {
             });
             return {
                 error: false,
-                message: "data added to array success",
+                message: 'data added to array success',
                 data: { _id: docRef.id },
             };
         }
@@ -150,7 +150,7 @@ class FirestoreService {
             });
             return {
                 error: false,
-                message: "data removed of array success",
+                message: 'data removed of array success',
                 data: { _id: docRef.id },
             };
         }
@@ -167,7 +167,7 @@ class FirestoreService {
             await (0, firestore_1.updateDoc)(docRef, {
                 [field]: (0, firestore_1.deleteField)(),
             });
-            return { error: false, message: "field deleted", data: { id } };
+            return { error: false, message: 'field deleted', data: { id } };
         }
         catch (e) {
             return {

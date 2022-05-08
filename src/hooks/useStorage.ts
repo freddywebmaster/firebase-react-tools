@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { ref, getDownloadURL, uploadBytes, getStorage } from "firebase/storage";
-import { FirebaseApp } from "firebase/app";
-import { FirestoreService } from "../firestore/Firestore";
+import { useState } from 'react';
+import { ref, getDownloadURL, uploadBytes, getStorage } from 'firebase/storage';
+import { FirebaseApp } from 'firebase/app';
+import { FirestoreService } from '../firestore/Firestore';
 
 export interface iResponseStorage {
   file?: {
@@ -16,32 +16,20 @@ export interface iResponseStorage {
   error: boolean;
 }
 
-export interface IUseStotage {
+export interface IUseStorage {
   uploading: boolean;
-  uploadFile(
-    reference: string,
-    file: File,
-    saveInDb?: boolean
-  ): Promise<iResponseStorage>;
-  uploadFiles(
-    reference: string,
-    files: FileList,
-    saveInDb?: boolean
-  ): Promise<Array<iResponseStorage>>;
+  uploadFile(reference: string, file: File, saveInDb?: boolean): Promise<iResponseStorage>;
+  uploadFiles(reference: string, files: FileList, saveInDb?: boolean): Promise<Array<iResponseStorage>>;
 }
 
-export const useStorage = (app: FirebaseApp): IUseStotage => {
+export const useStorage = (app: FirebaseApp): IUseStorage => {
   const storage = getStorage(app);
 
-  const db = new FirestoreService("storage", app);
+  const Db = new FirestoreService(app, 'storage');
 
   const [uploading, setUploading] = useState<boolean>(false);
 
-  const uploadFile = async (
-    reference: string,
-    file: File,
-    saveInDb?: boolean
-  ): Promise<iResponseStorage> => {
+  const uploadFile = async (reference: string, file: File, saveInDb?: boolean): Promise<iResponseStorage> => {
     if (uploading) return { error: true };
     try {
       setUploading(true);
@@ -63,11 +51,11 @@ export const useStorage = (app: FirebaseApp): IUseStotage => {
         },
       };
       if (url && saveInDb) {
-        const save = await db.add(fileResult, fileResult.metadata.generation);
+        const save = await Db.add(fileResult, fileResult.metadata.generation);
         if (save.error) {
           console.log(save.message);
         } else {
-          console.log("user was saved in db");
+          console.log('user was saved in db');
           console.log(save);
         }
       }
@@ -86,7 +74,7 @@ export const useStorage = (app: FirebaseApp): IUseStotage => {
   const uploadFiles = async (
     reference: string,
     files: FileList,
-    saveInDb?: boolean
+    saveInDb?: boolean,
   ): Promise<Array<iResponseStorage>> => {
     if (uploading) return [{ error: true }];
     try {
@@ -96,11 +84,7 @@ export const useStorage = (app: FirebaseApp): IUseStotage => {
       const totalFiles = files.length;
 
       for (let i = 0; i < totalFiles; i++) {
-        const upload = await uploadFile(
-          reference + `/${files[i].name}${i}`,
-          files[i],
-          saveInDb
-        );
+        const upload = await uploadFile(reference + `/${files[i].name}${i}`, files[i], saveInDb);
         resulArray.push(upload);
       }
 

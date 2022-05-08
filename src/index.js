@@ -1,10 +1,10 @@
 //auth exports
-const { AuthService } = require("./auth/Authentication");
+const { AuthService } = require('./auth/Authentication');
 
-const { FirestoreService } = require("./firestore/Firestore");
+const { FirestoreService } = require('./firestore/Firestore');
 
-const { useAuth } = require("./hooks/useAuth");
-const { useStorage } = require("./hooks/useStorage");
+const { useAuth } = require('./hooks/useAuth');
+const { useStorage } = require('./hooks/useStorage');
 
 module.exports = {
   AuthService,

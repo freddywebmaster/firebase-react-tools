@@ -6,7 +6,7 @@ const storage_1 = require("firebase/storage");
 const Firestore_1 = require("../firestore/Firestore");
 const useStorage = (app) => {
     const storage = (0, storage_1.getStorage)(app);
-    const db = new Firestore_1.FirestoreService("storage", app);
+    const Db = new Firestore_1.FirestoreService(app, 'storage');
     const [uploading, setUploading] = (0, react_1.useState)(false);
     const uploadFile = async (reference, file, saveInDb) => {
         if (uploading)
@@ -28,12 +28,12 @@ const useStorage = (app) => {
                 },
             };
             if (url && saveInDb) {
-                const save = await db.add(fileResult, fileResult.metadata.generation);
+                const save = await Db.add(fileResult, fileResult.metadata.generation);
                 if (save.error) {
                     console.log(save.message);
                 }
                 else {
-                    console.log("user was saved in db");
+                    console.log('user was saved in db');
                     console.log(save);
                 }
             }

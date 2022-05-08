@@ -18,37 +18,26 @@ import {
   signOut,
   FacebookAuthProvider,
   TwitterAuthProvider,
-} from "firebase/auth";
-import { FirebaseApp } from "firebase/app";
-import { FirestoreService } from "../firestore/Firestore";
+} from 'firebase/auth';
+import { FirebaseApp } from 'firebase/app';
 
 const googleProvider = new GoogleAuthProvider();
 const GithubProvider = new GithubAuthProvider();
 const FacebookProvider = new FacebookAuthProvider();
 const TwitterProvider = new TwitterAuthProvider();
 
-import { IAuthResponse, IUpdateProfile, IAuthFunctions } from "./interfaces";
+import { IAuthResponse, IUpdateProfile, IAuthFunctions } from './interfaces';
 
 export class AuthService implements IAuthFunctions {
   private auth: Auth;
-  private db: FirestoreService;
 
   constructor(app: FirebaseApp) {
     this.auth = getAuth(app);
-    this.db = new FirestoreService("users", app);
   }
 
-  public async createEmailAccount(
-    email: string,
-    password: string,
-    name?: string
-  ): Promise<IAuthResponse> {
+  public async createEmailAccount(email: string, password: string, name?: string): Promise<IAuthResponse> {
     try {
-      const newUser = await createUserWithEmailAndPassword(
-        this.auth,
-        email,
-        password
-      );
+      const newUser = await createUserWithEmailAndPassword(this.auth, email, password);
       if (name)
         await updateProfile(this.auth.currentUser as User, {
           displayName: name,
@@ -56,7 +45,7 @@ export class AuthService implements IAuthFunctions {
 
       return {
         error: false,
-        message: "Account created succesfully",
+        message: 'Account created succesfully',
         user: newUser.user,
       };
     } catch (e) {
@@ -68,15 +57,12 @@ export class AuthService implements IAuthFunctions {
     }
   }
 
-  public async loginEmailAccount(
-    email: string,
-    password: string
-  ): Promise<IAuthResponse> {
+  public async loginEmailAccount(email: string, password: string): Promise<IAuthResponse> {
     try {
       const res = await signInWithEmailAndPassword(this.auth, email, password);
       return {
         error: false,
-        message: "Login successfully",
+        message: 'Login successfully',
         user: res.user,
       };
     } catch (e) {
@@ -94,7 +80,7 @@ export class AuthService implements IAuthFunctions {
 
       return {
         error: false,
-        message: "Authentication successfully",
+        message: 'Authentication successfully',
         user: result.user,
       };
     } catch (e) {
@@ -110,7 +96,7 @@ export class AuthService implements IAuthFunctions {
       const result = await signInWithPopup(this.auth, GithubProvider);
       return {
         error: false,
-        message: "Authentication successfully",
+        message: 'Authentication successfully',
         user: result.user,
       };
     } catch (e) {
@@ -127,7 +113,7 @@ export class AuthService implements IAuthFunctions {
       const res = await signInWithPopup(this.auth, FacebookProvider);
       return {
         error: false,
-        message: "Authentication successfully",
+        message: 'Authentication successfully',
         user: res.user,
       };
     } catch (e) {
@@ -144,7 +130,7 @@ export class AuthService implements IAuthFunctions {
       const res = await signInWithPopup(this.auth, TwitterProvider);
       return {
         error: false,
-        message: "Authentication successfully",
+        message: 'Authentication successfully',
         user: res.user,
       };
     } catch (e) {
@@ -156,11 +142,7 @@ export class AuthService implements IAuthFunctions {
     }
   }
 
-  public async updatePass(
-    password: string,
-    newPassword: string,
-    callback?: Function
-  ): Promise<void> {
+  public async updatePass(password: string, newPassword: string, callback?: Function): Promise<void> {
     try {
       const user = this.auth.currentUser as User;
       await this.reAuthUser(password, () => {
@@ -177,10 +159,7 @@ export class AuthService implements IAuthFunctions {
     }
   }
 
-  public async UpdateProfile(
-    data: IUpdateProfile,
-    callback?: Function
-  ): Promise<void> {
+  public async UpdateProfile(data: IUpdateProfile, callback?: Function): Promise<void> {
     try {
       await updateProfile(this.auth.currentUser as User, data)
         .then(() => {
@@ -196,10 +175,7 @@ export class AuthService implements IAuthFunctions {
 
   public reAuthUser(password: string, callBack: Function): Promise<void> {
     const user = this.auth.currentUser as User;
-    const credential = EmailAuthProvider.credential(
-      user.email?.toLowerCase() || "null",
-      password
-    );
+    const credential = EmailAuthProvider.credential(user.email?.toLowerCase() || 'null', password);
     return reauthenticateWithCredential(user, credential)
       .then(() => {
         callBack(user);
@@ -219,10 +195,7 @@ export class AuthService implements IAuthFunctions {
     }
   }
 
-  public async sendResetPassword(
-    email: string,
-    callback: Function
-  ): Promise<void> {
+  public async sendResetPassword(email: string, callback: Function): Promise<void> {
     try {
       await sendPasswordResetEmail(this.auth, email)
         .then(() => {
@@ -236,10 +209,7 @@ export class AuthService implements IAuthFunctions {
     }
   }
 
-  public async deleteAccount(
-    password: string,
-    callback: Function
-  ): Promise<void> {
+  public async deleteAccount(password: string, callback: Function): Promise<void> {
     try {
       await this.reAuthUser(password, async () => {
         await deleteUser(this.auth.currentUser as User)
@@ -255,11 +225,7 @@ export class AuthService implements IAuthFunctions {
     }
   }
 
-  public async updateEmail(
-    password: string,
-    newEmail: string,
-    callback?: Function
-  ): Promise<void> {
+  public async updateEmail(password: string, newEmail: string, callback?: Function): Promise<void> {
     try {
       await this.reAuthUser(password, async () => {
         await updateEmail(this.auth.currentUser as User, newEmail)
@@ -286,18 +252,6 @@ export class AuthService implements IAuthFunctions {
         });
     } catch (error) {
       console.log(error);
-    }
-  }
-
-  async saveInFirestore(user: User): Promise<boolean> {
-    try {
-      const res = await this.db.update(user.uid, user, false);
-
-      if (res.error) return false;
-
-      return true;
-    } catch (error) {
-      return false;
     }
   }
 }

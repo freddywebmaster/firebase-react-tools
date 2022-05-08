@@ -1,11 +1,14 @@
 {
   "name": "firebase-react-tools",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "tools for firebase with react",
   "main": "./dist",
   "scripts": {
-    "build": "rm -rf ./dist && tsc && cp src/index.js dist/index.js"
+    "build": "rm -rf ./dist && tsc && cp src/index.js dist/index.js",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json"
   },
+  "files": ["dist/**/*"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/freddywebmaster/firebase-react-tools.git"
@@ -18,6 +21,7 @@
   "homepage": "https://github.com/freddywebmaster/firebase-react-tools#readme",
   "devDependencies": {
     "@types/react": "^18.0.6",
+    "prettier": "^2.6.2",
     "typescript": "^4.6.3"
   },
   "dependencies": {
