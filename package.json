@@ -1,11 +1,11 @@
 {
   "name": "firebase-react-tools",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "tools for firebase with react",
   "main": "./dist",
-  "types": "./index.d.ts",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "rm -rf ./dist && tsc && cp src/index.js dist/index.js",
+    "build": "rm -rf ./dist && tsc",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json"
   },

@@ -1,14 +1,11 @@
-//auth exports
-const { AuthService } = require('./auth/Authentication');
-
-const { FirestoreService } = require('./firestore/Firestore');
-
-const { useAuth } = require('./hooks/useAuth');
-const { useStorage } = require('./hooks/useStorage');
-
-module.exports = {
-  AuthService,
-  FirestoreService,
-  useAuth,
-  useStorage,
-};
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.useStorage = exports.useAuth = exports.FirestoreService = exports.AuthService = void 0;
+var Authentication_1 = require("./auth/Authentication");
+Object.defineProperty(exports, "AuthService", { enumerable: true, get: function () { return Authentication_1.AuthService; } });
+var Firestore_1 = require("./firestore/Firestore");
+Object.defineProperty(exports, "FirestoreService", { enumerable: true, get: function () { return Firestore_1.FirestoreService; } });
+var useAuth_1 = require("./hooks/useAuth");
+Object.defineProperty(exports, "useAuth", { enumerable: true, get: function () { return useAuth_1.useAuth; } });
+var useStorage_1 = require("./hooks/useStorage");
+Object.defineProperty(exports, "useStorage", { enumerable: true, get: function () { return useStorage_1.useStorage; } });
