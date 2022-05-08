@@ -27,10 +27,10 @@ export interface IUseStotage {
     reference: string,
     files: FileList,
     saveInDb?: boolean
-  ): Promise<Array<{}>>
+  ): Promise<Array<iResponseStorage>>;
 }
 
-export const useStorage = (app: FirebaseApp) => {
+export const useStorage = (app: FirebaseApp): IUseStotage => {
   const storage = getStorage(app);
 
   const db = new FirestoreService("storage", app);

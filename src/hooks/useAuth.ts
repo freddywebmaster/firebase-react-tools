@@ -26,7 +26,7 @@ export function useAuth(): IUseAuth {
     // eslint-disable-next-line
   }, [user]);
 
-  const result = { user, loading };
+  const result = { user, loading } as IUseAuth;
 
   return useMemo<IUseAuth>(() => result, [user, loading]);
 }

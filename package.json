@@ -4,7 +4,7 @@
   "description": "tools for firebase with react",
   "main": "./dist",
   "scripts": {
-    "build": "rm -rf ./dist && tsc"
+    "build": "rm -rf ./dist && tsc && cp src/index.js dist/index.js"
   },
   "repository": {
     "type": "git",
