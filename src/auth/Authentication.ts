@@ -150,12 +150,12 @@ export class AuthService implements IAuthFunctions {
           .then(() => {
             if (callback) callback(user);
           })
-          .catch((error) => {
-            console.log(error);
+          .catch((e) => {
+            if (callback) callback({ error: true, message: (e as Error).message });
           });
       });
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      if (callback) callback({ error: true, message: (e as Error).message });
     }
   }
 
@@ -165,23 +165,23 @@ export class AuthService implements IAuthFunctions {
         .then(() => {
           if (callback) callback();
         })
-        .catch((error) => {
-          console.log(error);
+        .catch((e) => {
+          if (callback) callback({ error: true, message: (e as Error).message });
         });
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      if (callback) callback({ error: true, message: (e as Error).message });
     }
   }
 
-  public reAuthUser(password: string, callBack: Function): Promise<void> {
+  public reAuthUser(password: string, callback: Function): Promise<void> {
     const user = this.auth.currentUser as User;
     const credential = EmailAuthProvider.credential(user.email?.toLowerCase() || 'null', password);
     return reauthenticateWithCredential(user, credential)
       .then(() => {
-        callBack(user);
+        callback(user);
       })
-      .catch((error: any) => {
-        console.log(error);
+      .catch((e) => {
+        callback({ error: true, message: (e as Error).message });
       });
   }
 
@@ -190,38 +190,38 @@ export class AuthService implements IAuthFunctions {
       await sendEmailVerification(this.auth.currentUser as User).then(() => {
         if (callback) callback();
       });
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      if (callback) callback({ error: true, message: (e as Error).message });
     }
   }
 
-  public async sendResetPassword(email: string, callback: Function): Promise<void> {
+  public async sendResetPassword(email: string, callback?: Function): Promise<void> {
     try {
       await sendPasswordResetEmail(this.auth, email)
         .then(() => {
-          callback();
+          if (callback) callback();
         })
-        .catch((error) => {
-          console.log(error);
+        .catch((e) => {
+          if (callback) callback({ error: true, message: (e as Error).message });
         });
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      if (callback) callback({ error: true, message: (e as Error).message });
     }
   }
 
-  public async deleteAccount(password: string, callback: Function): Promise<void> {
+  public async deleteAccount(password: string, callback?: Function): Promise<void> {
     try {
       await this.reAuthUser(password, async () => {
         await deleteUser(this.auth.currentUser as User)
           .then(() => {
-            callback();
+            if (callback) callback();
           })
-          .catch((error) => {
-            console.log(error);
+          .catch((e) => {
+            if (callback) callback({ error: true, message: (e as Error).message });
           });
       });
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      if (callback) callback({ error: true, message: (e as Error).message });
     }
   }
 
@@ -232,12 +232,12 @@ export class AuthService implements IAuthFunctions {
           .then(() => {
             if (callback) callback();
           })
-          .catch((error) => {
-            console.log(error);
+          .catch((e) => {
+            if (callback) callback({ error: true, message: (e as Error).message });
           });
       });
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      if (callback) callback({ error: true, message: (e as Error).message });
     }
   }
 
@@ -247,11 +247,15 @@ export class AuthService implements IAuthFunctions {
         .then(() => {
           if (callback) callback();
         })
-        .catch((error) => {
-          console.log(error);
+        .catch((e) => {
+          if (callback) callback({ error: true, message: (e as Error).message });
         });
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      if (callback) callback({ error: true, message: (e as Error).message });
     }
+  }
+
+  public currentUser(): User | null {
+    return this.auth.currentUser;
   }
 }
