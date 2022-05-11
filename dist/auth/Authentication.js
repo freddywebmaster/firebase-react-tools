@@ -124,13 +124,15 @@ class AuthService {
                     if (callback)
                         callback(user);
                 })
-                    .catch((error) => {
-                    console.log(error);
+                    .catch((e) => {
+                    if (callback)
+                        callback({ error: true, message: e.message });
                 });
             });
         }
-        catch (error) {
-            console.log(error);
+        catch (e) {
+            if (callback)
+                callback({ error: true, message: e.message });
         }
     }
     async UpdateProfile(data, callback) {
@@ -140,24 +142,26 @@ class AuthService {
                 if (callback)
                     callback();
             })
-                .catch((error) => {
-                console.log(error);
+                .catch((e) => {
+                if (callback)
+                    callback({ error: true, message: e.message });
             });
         }
-        catch (error) {
-            console.log(error);
+        catch (e) {
+            if (callback)
+                callback({ error: true, message: e.message });
         }
     }
-    reAuthUser(password, callBack) {
+    reAuthUser(password, callback) {
         var _a;
         const user = this.auth.currentUser;
         const credential = auth_1.EmailAuthProvider.credential(((_a = user.email) === null || _a === void 0 ? void 0 : _a.toLowerCase()) || 'null', password);
         return (0, auth_1.reauthenticateWithCredential)(user, credential)
             .then(() => {
-            callBack(user);
+            callback(user);
         })
-            .catch((error) => {
-            console.log(error);
+            .catch((e) => {
+            callback({ error: true, message: e.message });
         });
     }
     async sendVerification(callback) {
@@ -167,22 +171,26 @@ class AuthService {
                     callback();
             });
         }
-        catch (error) {
-            console.log(error);
+        catch (e) {
+            if (callback)
+                callback({ error: true, message: e.message });
         }
     }
     async sendResetPassword(email, callback) {
         try {
             await (0, auth_1.sendPasswordResetEmail)(this.auth, email)
                 .then(() => {
-                callback();
+                if (callback)
+                    callback();
             })
-                .catch((error) => {
-                console.log(error);
+                .catch((e) => {
+                if (callback)
+                    callback({ error: true, message: e.message });
             });
         }
-        catch (error) {
-            console.log(error);
+        catch (e) {
+            if (callback)
+                callback({ error: true, message: e.message });
         }
     }
     async deleteAccount(password, callback) {
@@ -190,15 +198,18 @@ class AuthService {
             await this.reAuthUser(password, async () => {
                 await (0, auth_1.deleteUser)(this.auth.currentUser)
                     .then(() => {
-                    callback();
+                    if (callback)
+                        callback();
                 })
-                    .catch((error) => {
-                    console.log(error);
+                    .catch((e) => {
+                    if (callback)
+                        callback({ error: true, message: e.message });
                 });
             });
         }
-        catch (error) {
-            console.log(error);
+        catch (e) {
+            if (callback)
+                callback({ error: true, message: e.message });
         }
     }
     async updateEmail(password, newEmail, callback) {
@@ -209,13 +220,15 @@ class AuthService {
                     if (callback)
                         callback();
                 })
-                    .catch((error) => {
-                    console.log(error);
+                    .catch((e) => {
+                    if (callback)
+                        callback({ error: true, message: e.message });
                 });
             });
         }
-        catch (error) {
-            console.log(error);
+        catch (e) {
+            if (callback)
+                callback({ error: true, message: e.message });
         }
     }
     async closeSession(callback) {
@@ -225,13 +238,18 @@ class AuthService {
                 if (callback)
                     callback();
             })
-                .catch((error) => {
-                console.log(error);
+                .catch((e) => {
+                if (callback)
+                    callback({ error: true, message: e.message });
             });
         }
-        catch (error) {
-            console.log(error);
+        catch (e) {
+            if (callback)
+                callback({ error: true, message: e.message });
         }
+    }
+    currentUser() {
+        return this.auth.currentUser;
     }
 }
 exports.AuthService = AuthService;
