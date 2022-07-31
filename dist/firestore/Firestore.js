@@ -49,46 +49,42 @@ class FirestoreService {
             return { error: true, message: e.message };
         }
     }
-    async find(queryOptions) {
-        if (!queryOptions) {
-            /** GET ALL */
-            try {
-                const querySnapshot = await (0, firestore_1.getDocs)((0, firestore_1.collection)(this.db, this.collection));
-                const result = [];
-                await querySnapshot.forEach((doc) => {
-                    let item = doc.data();
-                    item._id = doc.id;
-                    result.push(item);
+    async find(queryOptions, populated) {
+        try {
+            const q = queryOptions ? (0, firestore_1.query)((0, firestore_1.collection)(this.db, this.collection), queryOptions) : (0, firestore_1.collection)(this.db, this.collection);
+            const querySnapshot = await (0, firestore_1.getDocs)(q);
+            const result = [];
+            const resultPupulated = [];
+            await querySnapshot.forEach((doc) => {
+                let item = doc.data();
+                item._id = doc.id;
+                result.push(item);
+            });
+            if (populated && populated.length !== 0) {
+                const newResult = [];
+                populated.map(async (pupulation) => {
+                    const q = await (0, firestore_1.getDocs)((0, firestore_1.collection)(this.db, pupulation.collection));
+                    await q.forEach((doc) => {
+                        let item = doc.data();
+                        item._id = doc.id;
+                        item._collection = pupulation.collection;
+                        newResult.push(item);
+                    });
                 });
-                return {
-                    message: 'query executed success',
-                    data: result,
-                    error: false,
-                };
+                result.map((doc) => {
+                    populated.map((docPopulated) => (doc[docPopulated.field] =
+                        newResult.find((nr) => nr._id === doc[docPopulated.field] && nr._collection === docPopulated.collection) || 'not found'));
+                    resultPupulated.push(doc);
+                });
             }
-            catch (e) {
-                return { error: true, message: e.message };
-            }
+            return {
+                message: 'query executed success',
+                data: !populated ? result : resultPupulated,
+                error: false,
+            };
         }
-        else {
-            try {
-                const q = (0, firestore_1.query)((0, firestore_1.collection)(this.db, this.collection), queryOptions);
-                const querySnapshot = await (0, firestore_1.getDocs)(q);
-                const result = [];
-                await querySnapshot.forEach((doc) => {
-                    const item = doc.data();
-                    item._id = doc.id;
-                    result.push(item);
-                });
-                return {
-                    message: 'query executed success',
-                    data: result,
-                    error: false,
-                };
-            }
-            catch (e) {
-                return { error: true, message: e.message };
-            }
+        catch (e) {
+            return { error: true, message: e.message };
         }
     }
     async delete(id) {

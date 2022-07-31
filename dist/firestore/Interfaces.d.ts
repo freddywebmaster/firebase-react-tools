@@ -4,10 +4,15 @@ export interface IResponseFirestore {
     message: string;
     data?: DocumentData;
 }
+export interface IPopulated {
+    field: string;
+    collection: string;
+    isArray?: boolean;
+}
 export interface IFirebaseFunctions {
     add(data: DocumentData): Promise<IResponseFirestore>;
     findById(id: string): Promise<IResponseFirestore>;
-    find(queryOptions?: QueryConstraint): Promise<IResponseFirestore>;
+    find(queryOptions?: QueryConstraint, populated?: IPopulated[]): Promise<IResponseFirestore>;
     delete(id: string): Promise<IResponseFirestore>;
     update(id: string, newData: DocumentData, merge: boolean): Promise<IResponseFirestore>;
     transaction(id: string, field: string, value: number): Promise<IResponseFirestore>;
