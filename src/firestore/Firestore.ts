@@ -20,7 +20,7 @@ import {
   onSnapshot,
   Unsubscribe,
 } from 'firebase/firestore';
-import { IResponseFirestore, IFirebaseFunctions } from './Interfaces';
+import { IResponseFirestore, IFirebaseFunctions, IPopulated } from './Interfaces';
 
 export class FirestoreService implements IFirebaseFunctions {
   private db: Firestore;
@@ -71,48 +71,50 @@ export class FirestoreService implements IFirebaseFunctions {
     }
   }
 
-  public async find(queryOptions?: QueryConstraint): Promise<IResponseFirestore> {
-    if (!queryOptions) {
-      /** GET ALL */
-      try {
-        const querySnapshot = await getDocs(Col(this.db, this.collection));
-        const result: Array<{}> = [];
-        await querySnapshot.forEach((doc) => {
-          let item = doc.data();
-          item._id = doc.id;
-          result.push(item);
+  public async find(queryOptions?: QueryConstraint, populated?: IPopulated[]): Promise<IResponseFirestore> {
+    try {
+      const q = queryOptions ? query(Col(this.db, this.collection), queryOptions) : Col(this.db, this.collection);
+      const querySnapshot = await getDocs(q);
+      const result: Array<{}> = [];
+      const resultPupulated: Array<{}> = [];
+
+      await querySnapshot.forEach((doc) => {
+        let item = doc.data();
+        item._id = doc.id;
+        result.push(item);
+      });
+
+      if (populated && populated.length !== 0) {
+        const newResult: any = [];
+        populated.map(async (pupulation) => {
+          const q = await getDocs(Col(this.db, pupulation.collection));
+          await q.forEach((doc) => {
+            let item = doc.data();
+            item._id = doc.id;
+            item._collection = pupulation.collection;
+            newResult.push(item);
+          });
         });
 
-        return {
-          message: 'query executed success',
-          data: result,
-          error: false,
-        };
-      } catch (e) {
-        return { error: true, message: (e as Error).message };
-      }
-    } else {
-      try {
-        const q = query(Col(this.db, this.collection), queryOptions);
-
-        const querySnapshot = await getDocs(q);
-
-        const result: Array<{}> = [];
-
-        await querySnapshot.forEach((doc) => {
-          const item = doc.data();
-          item._id = doc.id;
-          result.push(item);
+        result.map((doc: any) => {
+          populated.map(
+            (docPopulated) =>
+              (doc[docPopulated.field] =
+                newResult.find(
+                  (nr: any) => nr._id === doc[docPopulated.field] && nr._collection === docPopulated.collection,
+                ) || 'not found'),
+          );
+          resultPupulated.push(doc);
         });
-
-        return {
-          message: 'query executed success',
-          data: result,
-          error: false,
-        };
-      } catch (e) {
-        return { error: true, message: (e as Error).message };
       }
+
+      return {
+        message: 'query executed success',
+        data: !populated ? result : resultPupulated,
+        error: false,
+      };
+    } catch (e) {
+      return { error: true, message: (e as Error).message };
     }
   }
 
