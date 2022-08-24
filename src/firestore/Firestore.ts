@@ -19,6 +19,7 @@ import {
   deleteField,
   onSnapshot,
   Unsubscribe,
+  DocumentSnapshot,
 } from 'firebase/firestore';
 import { IResponseFirestore, IFirebaseFunctions, IPopulated } from './Interfaces';
 
@@ -203,56 +204,28 @@ export class FirestoreService implements IFirebaseFunctions {
     }
   }
 
-  public findDocumentRt(id: string, callBack: Function): Unsubscribe | IResponseFirestore {
-    try {
-      return onSnapshot(doc(this.db, this.collection, id), function (doc) {
-        callBack(doc.data());
-      });
-    } catch (e) {
-      return {
-        error: true,
-        message: (e as Error).message,
-      } as IResponseFirestore;
-    }
+  public async documentSuscribe(
+    id: string,
+    callBack: (doc: DocumentSnapshot<DocumentData>) => void,
+  ): Promise<Unsubscribe> {
+    return onSnapshot(doc(this.db, this.collection, id), function (doc) {
+      callBack(doc);
+    });
   }
 
-  public findDocumentsRt(queryOptions: QueryConstraint, callback: Function): Unsubscribe | IResponseFirestore {
-    try {
-      const q = query(Col(this.db, this.collection), queryOptions);
-      return onSnapshot(q, (querySnapshot) => {
-        const result: Array<any> = [];
-        querySnapshot.forEach((doc) => {
-          let item = doc.data();
-          item.id = doc.id;
-          result.push(item);
-        });
-        callback(result);
+  public async collectionSuscribe(
+    callBack: (collection: DocumentData[]) => void,
+    queryOptions?: QueryConstraint,
+  ): Promise<Unsubscribe> {
+    const q = queryOptions ? query(Col(this.db, this.collection), queryOptions) : query(Col(this.db, this.collection));
+    return onSnapshot(q, (querySnapshot) => {
+      const result: Array<DocumentData> = [];
+      querySnapshot.forEach((doc) => {
+        let item = doc.data();
+        item._id = doc.id;
+        result.push(item);
       });
-    } catch (e) {
-      return {
-        error: true,
-        message: (e as Error).message,
-      } as IResponseFirestore;
-    }
-  }
-
-  public findCollectionRt(callBack: Function): Unsubscribe | IResponseFirestore {
-    try {
-      const q = query(Col(this.db, this.collection));
-      return onSnapshot(q, (querySnapshot) => {
-        const result: Array<any> = [];
-        querySnapshot.forEach((doc) => {
-          let item = doc.data();
-          item.id = doc.id;
-          result.push(item);
-        });
-        callBack(result);
-      });
-    } catch (e) {
-      return {
-        error: true,
-        message: (e as Error).message,
-      } as IResponseFirestore;
-    }
+      callBack(result);
+    });
   }
 }

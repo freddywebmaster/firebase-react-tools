@@ -176,58 +176,22 @@ class FirestoreService {
             };
         }
     }
-    findDocumentRt(id, callBack) {
-        try {
-            return (0, firestore_1.onSnapshot)((0, firestore_1.doc)(this.db, this.collection, id), function (doc) {
-                callBack(doc.data());
-            });
-        }
-        catch (e) {
-            return {
-                error: true,
-                message: e.message,
-            };
-        }
+    async documentSuscribe(id, callBack) {
+        return (0, firestore_1.onSnapshot)((0, firestore_1.doc)(this.db, this.collection, id), function (doc) {
+            callBack(doc);
+        });
     }
-    findDocumentsRt(queryOptions, callback) {
-        try {
-            const q = (0, firestore_1.query)((0, firestore_1.collection)(this.db, this.collection), queryOptions);
-            return (0, firestore_1.onSnapshot)(q, (querySnapshot) => {
-                const result = [];
-                querySnapshot.forEach((doc) => {
-                    let item = doc.data();
-                    item.id = doc.id;
-                    result.push(item);
-                });
-                callback(result);
+    async collectionSuscribe(callBack, queryOptions) {
+        const q = queryOptions ? (0, firestore_1.query)((0, firestore_1.collection)(this.db, this.collection), queryOptions) : (0, firestore_1.query)((0, firestore_1.collection)(this.db, this.collection));
+        return (0, firestore_1.onSnapshot)(q, (querySnapshot) => {
+            const result = [];
+            querySnapshot.forEach((doc) => {
+                let item = doc.data();
+                item._id = doc.id;
+                result.push(item);
             });
-        }
-        catch (e) {
-            return {
-                error: true,
-                message: e.message,
-            };
-        }
-    }
-    findCollectionRt(callBack) {
-        try {
-            const q = (0, firestore_1.query)((0, firestore_1.collection)(this.db, this.collection));
-            return (0, firestore_1.onSnapshot)(q, (querySnapshot) => {
-                const result = [];
-                querySnapshot.forEach((doc) => {
-                    let item = doc.data();
-                    item.id = doc.id;
-                    result.push(item);
-                });
-                callBack(result);
-            });
-        }
-        catch (e) {
-            return {
-                error: true,
-                message: e.message,
-            };
-        }
+            callBack(result);
+        });
     }
 }
 exports.FirestoreService = FirestoreService;

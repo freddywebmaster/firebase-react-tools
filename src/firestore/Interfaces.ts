@@ -1,4 +1,4 @@
-import { DocumentData, QueryConstraint, Unsubscribe } from 'firebase/firestore';
+import { DocumentData, DocumentSnapshot, QueryConstraint, Unsubscribe } from 'firebase/firestore';
 
 export interface IResponseFirestore {
   error: boolean;
@@ -22,7 +22,9 @@ export interface IFirebaseFunctions {
   addInArray(id: string, field: string, data: DocumentData): Promise<IResponseFirestore>;
   deleteInArray(id: string, field: string, data: DocumentData): Promise<IResponseFirestore>;
   deleteField(id: string, field: string): Promise<IResponseFirestore>;
-  findDocumentRt(id: string, callBack: Function): Unsubscribe | IResponseFirestore;
-  findDocumentsRt(queryOptions: QueryConstraint, callback: Function): Unsubscribe | IResponseFirestore;
-  findCollectionRt(callBack: Function): Unsubscribe | IResponseFirestore;
+  documentSuscribe(id: string, callBack: (doc: DocumentSnapshot<DocumentData>) => void): Promise<Unsubscribe>;
+  collectionSuscribe(
+    callBack: (collection: DocumentData[]) => void,
+    queryOptions?: QueryConstraint,
+  ): Promise<Unsubscribe>;
 }
