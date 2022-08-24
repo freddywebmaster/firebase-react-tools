@@ -204,19 +204,16 @@ export class FirestoreService implements IFirebaseFunctions {
     }
   }
 
-  public async documentSuscribe(
-    id: string,
-    callBack: (doc: DocumentSnapshot<DocumentData>) => void,
-  ): Promise<Unsubscribe> {
+  public documentSuscribe(id: string, callBack: (doc: DocumentSnapshot<DocumentData>) => void): Unsubscribe {
     return onSnapshot(doc(this.db, this.collection, id), function (doc) {
       callBack(doc);
     });
   }
 
-  public async collectionSuscribe(
+  public collectionSuscribe(
     callBack: (collection: DocumentData[]) => void,
     queryOptions?: QueryConstraint,
-  ): Promise<Unsubscribe> {
+  ): Unsubscribe {
     const q = queryOptions ? query(Col(this.db, this.collection), queryOptions) : query(Col(this.db, this.collection));
     return onSnapshot(q, (querySnapshot) => {
       const result: Array<DocumentData> = [];

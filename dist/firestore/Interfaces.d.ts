@@ -19,6 +19,6 @@ export interface IFirebaseFunctions {
     addInArray(id: string, field: string, data: DocumentData): Promise<IResponseFirestore>;
     deleteInArray(id: string, field: string, data: DocumentData): Promise<IResponseFirestore>;
     deleteField(id: string, field: string): Promise<IResponseFirestore>;
-    documentSuscribe(id: string, callBack: (doc: DocumentSnapshot<DocumentData>) => void): Promise<Unsubscribe>;
-    collectionSuscribe(callBack: (collection: DocumentData[]) => void, queryOptions?: QueryConstraint): Promise<Unsubscribe>;
+    documentSuscribe(id: string, callBack: (doc: DocumentSnapshot<DocumentData>) => void): Unsubscribe;
+    collectionSuscribe(callBack: (collection: DocumentData[]) => void, queryOptions?: QueryConstraint): Unsubscribe;
 }

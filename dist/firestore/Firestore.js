@@ -176,12 +176,12 @@ class FirestoreService {
             };
         }
     }
-    async documentSuscribe(id, callBack) {
+    documentSuscribe(id, callBack) {
         return (0, firestore_1.onSnapshot)((0, firestore_1.doc)(this.db, this.collection, id), function (doc) {
             callBack(doc);
         });
     }
-    async collectionSuscribe(callBack, queryOptions) {
+    collectionSuscribe(callBack, queryOptions) {
         const q = queryOptions ? (0, firestore_1.query)((0, firestore_1.collection)(this.db, this.collection), queryOptions) : (0, firestore_1.query)((0, firestore_1.collection)(this.db, this.collection));
         return (0, firestore_1.onSnapshot)(q, (querySnapshot) => {
             const result = [];
