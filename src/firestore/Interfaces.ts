@@ -15,10 +15,7 @@ export interface IPopulated {
 export interface IFirebaseFunctions {
   add(data: DocumentData): Promise<IResponseFirestore>;
   findById(id: string): Promise<IResponseFirestore>;
-  find(
-    queryOptions?: QueryConstraint,
-    populated?: IPopulated[],
-  ): Promise<IResponseFirestore>;
+  find(queryOptions?: QueryConstraint): Promise<IResponseFirestore>;
   delete(id: string): Promise<IResponseFirestore>;
   update(id: string, newData: DocumentData, merge: boolean): Promise<IResponseFirestore>;
   transaction(id: string, field: string, value: number): Promise<IResponseFirestore>;
