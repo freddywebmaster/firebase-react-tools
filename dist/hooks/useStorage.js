@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.useStorage = void 0;
 const react_1 = require("react");
 const storage_1 = require("firebase/storage");
-const Firestore_1 = require("../firestore/Firestore");
+const Firestore_1 = require("../services/firestore/Firestore");
 const useStorage = (app) => {
     const storage = (0, storage_1.getStorage)(app);
     const Db = new Firestore_1.FirestoreService(app, 'storage');

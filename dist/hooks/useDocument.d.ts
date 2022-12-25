@@ -1,4 +1,4 @@
-import { FirestoreService } from '../firestore/Firestore';
+import { FirestoreService } from '../services/firestore/Firestore';
 declare type QueryResult<T> = {
     isLoading: boolean;
     error: boolean;

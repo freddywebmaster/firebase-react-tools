@@ -1,4 +1,4 @@
-import { FirestoreService } from '../firestore/Firestore';
+import { FirestoreService } from '../services/firestore/Firestore';
 import { useEffect, useState } from 'react';
 
 type QueryResult<T> = {

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ref, getDownloadURL, uploadBytes, getStorage } from 'firebase/storage';
 import { FirebaseApp } from 'firebase/app';
-import { FirestoreService } from '../firestore/Firestore';
+import { FirestoreService } from '../services/firestore/Firestore';
 
 export interface iResponseStorage {
   file?: {
