@@ -3,26 +3,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FirestoreService = void 0;
 const firestore_1 = require("firebase/firestore");
 class FirestoreService {
-    constructor(app, collection) {
-        this.db = (0, firestore_1.getFirestore)(app);
+    constructor(app, collection, config) {
+        this.db = config ? (0, firestore_1.initializeFirestore)(app, config) : (0, firestore_1.getFirestore)(app);
         this.collection = collection;
     }
     async add(data, id) {
         try {
             if (!id) {
                 const docRef = await (0, firestore_1.addDoc)((0, firestore_1.collection)(this.db, this.collection), data);
-                data._id = docRef.id;
+                data.id = docRef.id;
                 return {
-                    data,
+                    data: data,
                     message: `document created with id: ${docRef.id}`,
                     error: false,
                 };
             }
             else {
                 await (0, firestore_1.setDoc)((0, firestore_1.doc)(this.db, this.collection, id), data, { merge: true });
-                data._id = id;
+                data.id = id;
                 return {
-                    data,
+                    data: data,
                     message: `document created with id: ${id}`,
                     error: false,
                 };
@@ -38,7 +38,7 @@ class FirestoreService {
             const docSnap = await (0, firestore_1.getDoc)(docRef);
             if (docSnap.exists()) {
                 let result = docSnap.data();
-                result._id = docSnap.id;
+                result.id = docSnap.id;
                 return { message: 'Doc Exist', data: result, error: false };
             }
             else {
@@ -57,7 +57,7 @@ class FirestoreService {
                 const result = [];
                 await querySnapshot.forEach((doc) => {
                     let item = doc.data();
-                    item._id = doc.id;
+                    item.id = doc.id;
                     result.push(item);
                 });
                 return {
@@ -77,7 +77,7 @@ class FirestoreService {
                 const result = [];
                 await querySnapshot.forEach((doc) => {
                     const item = doc.data();
-                    item._id = doc.id;
+                    item.id = doc.id;
                     result.push(item);
                 });
                 return {
@@ -94,7 +94,7 @@ class FirestoreService {
     async delete(id) {
         try {
             await (0, firestore_1.deleteDoc)((0, firestore_1.doc)(this.db, this.collection, id));
-            return { data: { id }, message: `doc deleted: ${id}`, error: false };
+            return { data: id, message: `doc deleted: ${id}`, error: false };
         }
         catch (e) {
             return { error: true, message: e.message };
@@ -104,7 +104,7 @@ class FirestoreService {
         try {
             const docRef = (0, firestore_1.doc)(this.db, this.collection, id);
             (0, firestore_1.setDoc)(docRef, newData, { merge });
-            newData._id = id;
+            newData.id = id;
             return { data: newData, message: `Doc updated ${id}`, error: false };
         }
         catch (e) {
@@ -132,7 +132,6 @@ class FirestoreService {
             return {
                 error: false,
                 message: 'data added to array success',
-                data: { _id: docRef.id },
             };
         }
         catch (e) {
@@ -151,7 +150,6 @@ class FirestoreService {
             return {
                 error: false,
                 message: 'data removed of array success',
-                data: { _id: docRef.id },
             };
         }
         catch (e) {
@@ -167,7 +165,7 @@ class FirestoreService {
             await (0, firestore_1.updateDoc)(docRef, {
                 [field]: (0, firestore_1.deleteField)(),
             });
-            return { error: false, message: 'field deleted', data: { id } };
+            return { error: false, message: 'field deleted' };
         }
         catch (e) {
             return {

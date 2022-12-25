@@ -1,6 +1,6 @@
 {
   "name": "firebase-react-tools",
-  "version": "0.0.12",
+  "version": "0.6.0",
   "description": "tools for firebase with react",
   "main": "./dist",
   "types": "./dist/index.d.ts",
@@ -14,7 +14,7 @@
     "type": "git",
     "url": "git+https://github.com/freddywebmaster/firebase-react-tools.git"
   },
-  "author": "freddy gutierrez",
+  "author": "freddywebmaster",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/freddywebmaster/firebase-react-tools/issues"
@@ -26,7 +26,7 @@
     "typescript": "^4.6.3"
   },
   "dependencies": {
-    "firebase": "^9.1.0",
+    "firebase": "9.15.0",
     "react": "^18.0.0"
   }
 }
