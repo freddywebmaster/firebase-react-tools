@@ -8,7 +8,7 @@ export async function useDocumentRT<State>(
 ) {
   useEffect(() => {
     const unsuscribe = service.documentSuscribe(id, (data) =>
-      cb({ ...data.data(), id: data.id } as State)
+      cb({ ...data.data(), id: data.id } as unknown as State)
     );
 
     return () => unsuscribe();
