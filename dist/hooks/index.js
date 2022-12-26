@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.useStorage = exports.useQuery = exports.useDocument = exports.useAuth = void 0;
+exports.useDocumentRT = exports.useQueryRT = exports.useStorage = exports.useQuery = exports.useDocument = exports.useAuth = void 0;
 var useAuth_1 = require("./useAuth");
 Object.defineProperty(exports, "useAuth", { enumerable: true, get: function () { return useAuth_1.useAuth; } });
 var useDocument_1 = require("./useDocument");
@@ -9,3 +9,7 @@ var useQuery_1 = require("./useQuery");
 Object.defineProperty(exports, "useQuery", { enumerable: true, get: function () { return useQuery_1.useQuery; } });
 var useStorage_1 = require("./useStorage");
 Object.defineProperty(exports, "useStorage", { enumerable: true, get: function () { return useStorage_1.useStorage; } });
+var useQueryRT_1 = require("./useQueryRT");
+Object.defineProperty(exports, "useQueryRT", { enumerable: true, get: function () { return useQueryRT_1.useQueryRT; } });
+var useDocumentRT_1 = require("./useDocumentRT");
+Object.defineProperty(exports, "useDocumentRT", { enumerable: true, get: function () { return useDocumentRT_1.useDocumentRT; } });

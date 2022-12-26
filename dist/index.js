@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initFirebaseTools = exports.useStorage = exports.useQuery = exports.useDocument = exports.useAuth = exports.FirestoreService = exports.AuthService = void 0;
+exports.initFirebaseTools = exports.useQueryRT = exports.useDocumentRT = exports.useStorage = exports.useQuery = exports.useDocument = exports.useAuth = exports.FirestoreService = exports.AuthService = void 0;
 var services_1 = require("./services");
 Object.defineProperty(exports, "AuthService", { enumerable: true, get: function () { return services_1.AuthService; } });
 Object.defineProperty(exports, "FirestoreService", { enumerable: true, get: function () { return services_1.FirestoreService; } });
@@ -9,5 +9,7 @@ Object.defineProperty(exports, "useAuth", { enumerable: true, get: function () {
 Object.defineProperty(exports, "useDocument", { enumerable: true, get: function () { return hooks_1.useDocument; } });
 Object.defineProperty(exports, "useQuery", { enumerable: true, get: function () { return hooks_1.useQuery; } });
 Object.defineProperty(exports, "useStorage", { enumerable: true, get: function () { return hooks_1.useStorage; } });
+Object.defineProperty(exports, "useDocumentRT", { enumerable: true, get: function () { return hooks_1.useDocumentRT; } });
+Object.defineProperty(exports, "useQueryRT", { enumerable: true, get: function () { return hooks_1.useQueryRT; } });
 var init_1 = require("./lib/init");
 Object.defineProperty(exports, "initFirebaseTools", { enumerable: true, get: function () { return init_1.initFirebaseTools; } });
