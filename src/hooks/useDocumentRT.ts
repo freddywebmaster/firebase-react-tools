@@ -1,4 +1,4 @@
-import { FirestoreService } from "firebase-react-tools";
+import { FirestoreService } from "../services/firestore/Firestore";
 import { useEffect } from "react";
 
 export async function useDocumentRT<State>(
