@@ -185,7 +185,7 @@ class FirestoreService {
             const result = [];
             querySnapshot.forEach((doc) => {
                 let item = doc.data();
-                item._id = doc.id;
+                item.id = doc.id;
                 result.push(item);
             });
             callBack(result);

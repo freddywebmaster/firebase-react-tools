@@ -19,9 +19,9 @@ import {
   deleteField,
   onSnapshot,
   Unsubscribe,
-  DocumentSnapshot,
   initializeFirestore,
   FirestoreSettings,
+  DocumentSnapshot,
 } from 'firebase/firestore';
 import { IResponseFirestore, IFirebaseFunctions } from './Interfaces';
 
@@ -155,7 +155,7 @@ export class FirestoreService<T> implements IFirebaseFunctions<T> {
   public async addInArray(
     id: string,
     field: string,
-    data: DocumentData,
+    data: any,
   ): Promise<IResponseFirestore<{ error: boolean; message: string }>> {
     try {
       const docRef = doc(this.db, this.collection, id);
@@ -177,7 +177,7 @@ export class FirestoreService<T> implements IFirebaseFunctions<T> {
   public async deleteInArray(
     id: string,
     field: string,
-    data: DocumentData,
+    data: any,
   ): Promise<IResponseFirestore<{ error: boolean; message: string }>> {
     try {
       const docRef = doc(this.db, this.collection, id);
@@ -227,7 +227,7 @@ export class FirestoreService<T> implements IFirebaseFunctions<T> {
       const result: Array<T> = [];
       querySnapshot.forEach((doc) => {
         let item = doc.data();
-        item._id = doc.id;
+        item.id = doc.id;
         result.push(item as T);
       });
       callBack(result);

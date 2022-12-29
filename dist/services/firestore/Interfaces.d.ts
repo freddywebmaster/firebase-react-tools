@@ -16,11 +16,11 @@ export interface IFirebaseFunctions<T> {
     delete(id: string): Promise<IResponseFirestore<string>>;
     update(id: string, newData: DocumentData, merge: boolean): Promise<IResponseFirestore<T>>;
     transaction(id: string, field: string, value: number): Promise<IResponseFirestore<T>>;
-    addInArray(id: string, field: string, data: DocumentData): Promise<IResponseFirestore<{
+    addInArray(id: string, field: string, data: any): Promise<IResponseFirestore<{
         error: boolean;
         message: string;
     }>>;
-    deleteInArray(id: string, field: string, data: DocumentData): Promise<IResponseFirestore<{
+    deleteInArray(id: string, field: string, data: any): Promise<IResponseFirestore<{
         error: boolean;
         message: string;
     }>>;
