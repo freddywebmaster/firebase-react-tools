@@ -1,6 +1,6 @@
 {
   "name": "firebase-react-tools",
-  "version": "0.3.6",
+  "version": "0.3.9",
   "description": "tools for firebase with react",
   "main": "./dist",
   "types": "./dist/index.d.ts",
