@@ -4,7 +4,7 @@ exports.useDocument = void 0;
 const react_1 = require("react");
 function useDocument(service, setState, id, objectCache) {
     const [isLoading, setIsLoading] = (0, react_1.useState)(false);
-    const [error, setError] = (0, react_1.useState)(false);
+    const [error, setError] = (0, react_1.useState)(true);
     const getData = async () => {
         setIsLoading(true);
         const res = await service.findById(id);
@@ -16,7 +16,12 @@ function useDocument(service, setState, id, objectCache) {
     const refetch = async () => await getData();
     (0, react_1.useEffect)(() => {
         if (objectCache) {
-            Object.keys(objectCache).length === 0 && getData();
+            if (Object.keys(objectCache).length === 0) {
+                getData();
+            }
+            else {
+                setIsLoading(false);
+            }
         }
         else {
             getData();

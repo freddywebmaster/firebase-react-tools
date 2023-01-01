@@ -12,10 +12,10 @@ export function useDocument<State>(
   service: FirestoreService<State>,
   setState: (data: State) => void,
   id: string,
-  objectCache?: State
+  objectCache?: State,
 ): QueryResult<State> {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(true);
 
   const getData = async () => {
     setIsLoading(true);
@@ -31,9 +31,12 @@ export function useDocument<State>(
   const refetch = async () => await getData();
 
   useEffect(() => {
-
-    if(objectCache){
-      Object.keys(objectCache).length === 0 && getData();
+    if (objectCache) {
+      if (Object.keys(objectCache).length === 0) {
+        getData();
+      } else {
+        setIsLoading(false);
+      }
     } else {
       getData();
     }

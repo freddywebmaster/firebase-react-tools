@@ -19,7 +19,7 @@ export function useQuery<State>(
   options?: OptionsQuery,
   arrayCache?: State[],
 ): QueryResult<State> {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
 
   const getData = async () => {
@@ -37,7 +37,11 @@ export function useQuery<State>(
 
   useEffect(() => {
     if (arrayCache) {
-      arrayCache.length === 0 && getData();
+      if (arrayCache.length === 0) {
+        getData();
+      } else {
+        setIsLoading(false);
+      }
     } else {
       getData();
     }
