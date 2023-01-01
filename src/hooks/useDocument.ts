@@ -14,8 +14,8 @@ export function useDocument<State>(
   id: string,
   objectCache?: State,
 ): QueryResult<State> {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<boolean>(false);
 
   const getData = async () => {
     setIsLoading(true);
