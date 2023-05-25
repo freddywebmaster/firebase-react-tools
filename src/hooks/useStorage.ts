@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ref, getDownloadURL, uploadBytes, getStorage } from 'firebase/storage';
+import { ref, getDownloadURL, uploadBytes, getStorage, deleteObject } from 'firebase/storage';
 import { FirebaseApp } from 'firebase/app';
 import { FirestoreService } from '../services/firestore/Firestore';
 
@@ -20,6 +20,7 @@ export interface IUseStorage {
   uploading: boolean;
   uploadFile(reference: string, file: File, saveInDb?: boolean): Promise<iResponseStorage>;
   uploadFiles(reference: string, files: FileList, saveInDb?: boolean): Promise<Array<iResponseStorage>>;
+  deleteImage: (imageUrl: string) => Promise<void>;
 }
 
 export const useStorage = (app: FirebaseApp): IUseStorage => {
@@ -96,9 +97,18 @@ export const useStorage = (app: FirebaseApp): IUseStorage => {
     }
   };
 
+  const deleteImage = async (imageUrl: string) => {
+    const storage = getStorage(app);
+
+    const reference = ref(storage, imageUrl);
+
+    return await deleteObject(reference);
+  };
+
   return {
     uploading,
     uploadFile,
     uploadFiles,
+    deleteImage,
   };
 };

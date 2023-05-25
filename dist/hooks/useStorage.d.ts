@@ -15,5 +15,6 @@ export interface IUseStorage {
     uploading: boolean;
     uploadFile(reference: string, file: File, saveInDb?: boolean): Promise<iResponseStorage>;
     uploadFiles(reference: string, files: FileList, saveInDb?: boolean): Promise<Array<iResponseStorage>>;
+    deleteImage: (imageUrl: string) => Promise<void>;
 }
 export declare const useStorage: (app: FirebaseApp) => IUseStorage;

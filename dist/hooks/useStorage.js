@@ -68,10 +68,16 @@ const useStorage = (app) => {
             return [{ error: true }];
         }
     };
+    const deleteImage = async (imageUrl) => {
+        const storage = (0, storage_1.getStorage)(app);
+        const reference = (0, storage_1.ref)(storage, imageUrl);
+        return await (0, storage_1.deleteObject)(reference);
+    };
     return {
         uploading,
         uploadFile,
         uploadFiles,
+        deleteImage,
     };
 };
 exports.useStorage = useStorage;

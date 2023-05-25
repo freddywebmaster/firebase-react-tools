@@ -4,3 +4,4 @@ export { useQuery } from './useQuery';
 export { useStorage } from './useStorage';
 export { useQueryRT } from './useQueryRT';
 export { useDocumentRT } from './useDocumentRT';
+export { useMutation } from './useMutation';
